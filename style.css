@@ -10,29 +10,38 @@ body {
   color: #222;
 }
 
-/* ヘッダー */
+/* ヘッダー全体 */
 .app-header {
   background-color: #00704a;
+  padding: 10px 16px;
   color: white;
-  padding: 0.75rem 1rem;
-}
-.header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 900px;
-  margin: 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
-.logo {
-  font-size: 1.5rem;
+
+/* アプリ名 */
+.app-header .logo {
+  font-size: 1.5em;
   font-weight: bold;
 }
+
+/* ログアウトボタン */
 .logout-btn {
   background: none;
   border: none;
   color: white;
-  font-size: 1rem;
+  font-size: 0.9em;
   cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* メインレイアウト */
