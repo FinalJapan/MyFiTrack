@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MyFitTrack - マイページ</title>
 
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#00704a" />
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-  <!-- ヘッダー -->
   <header class="bg-green-600 text-white px-4 py-3 flex justify-between items-center shadow-md">
     <h1 class="text-xl font-bold">MyFitTrack</h1>
     <button id="logoutBtn" class="text-sm underline">ログアウト</button>
@@ -20,45 +18,58 @@
 
   <main class="max-w-md mx-auto p-4 space-y-6">
 
-    <!-- プロフィールカード -->
+    <!-- プロフィール -->
     <section class="bg-white rounded-xl shadow-md p-5">
       <h2 class="text-xl font-semibold mb-4">👤 プロフィール</h2>
 
-      <label class="block mb-2">年齢</label>
-      <input type="number" id="age" class="w-full border rounded-lg px-3 py-2 mb-3" />
-
-      <label class="block mb-2">性別</label>
-      <div class="flex gap-4 mb-3">
-        <label><input type="radio" name="gender" value="male" class="mr-1" checked> 男性</label>
-        <label><input type="radio" name="gender" value="female" class="mr-1"> 女性</label>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="age" class="w-28 font-medium">年齢:</label>
+        <input type="number" id="age" class="flex-1 border rounded-lg px-3 py-2" />
       </div>
 
-      <label class="block mb-2">身長 (cm)</label>
-      <input type="number" id="height" class="w-full border rounded-lg px-3 py-2 mb-3" />
+      <div class="flex items-center gap-4 mb-4">
+        <span class="w-28 font-medium">性別:</span>
+        <div class="flex-1 flex gap-4">
+          <label class="flex items-center"><input type="radio" name="gender" value="male" class="mr-1" checked> 男性</label>
+          <label class="flex items-center"><input type="radio" name="gender" value="female" class="mr-1"> 女性</label>
+        </div>
+      </div>
 
-      <label class="block mb-2">現在の体重 (kg)</label>
-      <input type="number" id="currentWeight" class="w-full border rounded-lg px-3 py-2 mb-3" />
+      <div class="flex items-center gap-4 mb-4">
+        <label for="height" class="w-28 font-medium">身長 (cm):</label>
+        <input type="number" id="height" class="flex-1 border rounded-lg px-3 py-2" />
+      </div>
 
-      <label class="block mb-2">目標体重 (kg)</label>
-      <input type="number" id="targetWeight" class="w-full border rounded-lg px-3 py-2 mb-3" />
+      <div class="flex items-center gap-4 mb-4">
+        <label for="currentWeight" class="w-28 font-medium">現体重 (kg):</label>
+        <input type="number" id="currentWeight" class="flex-1 border rounded-lg px-3 py-2" />
+      </div>
 
-      <button id="saveWeight" class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-full font-medium mt-2">💾 保存</button>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="targetWeight" class="w-28 font-medium">目標体重 (kg):</label>
+        <input type="number" id="targetWeight" class="flex-1 border rounded-lg px-3 py-2" />
+      </div>
 
+      <button id="saveWeight" class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-full font-medium mt-4">💾 保存</button>
       <p id="weightInfo" class="mt-4 text-sm text-gray-600"></p>
       <p id="recommendedCalories" class="text-sm text-gray-600"></p>
     </section>
 
-    <!-- 食事記録カード -->
+    <!-- 食事記録 -->
     <section class="bg-white rounded-xl shadow-md p-5">
       <h2 class="text-xl font-semibold mb-4">🍴 食事記録</h2>
 
-      <label class="block mb-2">メニュー名</label>
-      <input type="text" id="foodName" class="w-full border rounded-lg px-3 py-2 mb-3" placeholder="例: カレーライス" />
+      <div class="flex items-center gap-4 mb-4">
+        <label for="foodName" class="w-28 font-medium">メニュー名:</label>
+        <input type="text" id="foodName" class="flex-1 border rounded-lg px-3 py-2" placeholder="例: カレーライス" />
+      </div>
 
-      <ul id="suggestList" class="suggest-box"></ul>
+      <ul id="suggestList" class="suggest-box mb-3"></ul>
 
-      <label class="block mb-2">カロリー</label>
-      <input type="number" id="calories" class="w-full border rounded-lg px-3 py-2 mb-3" placeholder="kcal" />
+      <div class="flex items-center gap-4 mb-4">
+        <label for="calories" class="w-28 font-medium">カロリー:</label>
+        <input type="number" id="calories" class="flex-1 border rounded-lg px-3 py-2" placeholder="kcal" />
+      </div>
 
       <button id="addMeal" class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-full font-medium">🍱 追加</button>
     </section>
@@ -72,27 +83,20 @@
 
   </main>
 
-  <!-- オフラインステータス -->
-  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-3 py-2 rounded shadow-md hidden" id="offlineStatus">
-    You are offline
-  </div>
-
   <footer class="text-center text-sm text-gray-400 py-4 mt-8">
     &copy; 2025 MyFitTrack
   </footer>
 
   <script src="mypage.js" defer></script>
-  <script src="mypage.js" defer></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('./service-worker.js')
-        .then(reg => console.log('✅ Service Worker Registered:', reg))
-        .catch(err => console.error('❌ Service Worker registration failed:', err));
-    });
-  }
-</script>
-
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('./service-worker.js')
+          .then(reg => console.log('✅ SW registered', reg))
+          .catch(err => console.error('❌ SW failed', err));
+      });
+    }
+  </script>
 </body>
 </html>
