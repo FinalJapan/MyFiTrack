@@ -10,8 +10,10 @@
 
   <!-- ヘッダー -->
   <header class="app-header">
-    <span class="logo">MyFitTrack</span>
-    <button class="logout-btn" onclick="logout()">ログアウト</button>
+    <div class="header-container">
+      <div class="logo">MyFitTrack</div>
+      <button class="logout-btn" onclick="logout()">ログアウト</button>
+    </div>
   </header>
 
   <main>
@@ -58,7 +60,7 @@
       <div class="form-group">
         <label>メニュー名:</label>
         <div style="position: relative;">
-          <input type="text" id="foodName" placeholder="例: カレーライス" autocomplete="off"/>
+          <input type="text" id="foodName" placeholder="例: カレーライス" autocomplete="off" />
           <ul id="suggestList" class="suggest-box"></ul>
         </div>
       </div>
@@ -77,6 +79,7 @@
       <ul id="mealList"></ul>
       <p id="totalCalories">合計: 0 kcal</p>
     </section>
+
   </main>
 
   <footer>
