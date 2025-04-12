@@ -3,10 +3,13 @@ let mealList = [];
 const STORAGE_KEY = "foodDB";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const ageInput = document.getElementById("age");
+  const heightInput = document.getElementById("height");
   const currentWeightInput = document.getElementById("currentWeight");
   const targetWeightInput = document.getElementById("targetWeight");
   const saveBtn = document.getElementById("saveWeight");
   const weightInfo = document.getElementById("weightInfo");
+  const recommendedCalories = document.getElementById("recommendedCalories");
 
   const foodInput = document.getElementById("foodName");
   const calInput = document.getElementById("calories");
@@ -15,11 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalEl = document.getElementById("totalCalories");
   const suggestList = document.getElementById("suggestList");
 
-  const weightData = JSON.parse(localStorage.getItem("weightData"));
-  if (weightData) {
-    currentWeightInput.value = weightData.current;
-    targetWeightInput.value = weightData.target;
-    weightInfo.textContent = `目標まであと ${(weightData.current - weightData.target).toFixed(1)}kg`;
+  const profile = JSON.parse(localStorage.getItem("profileData"));
+  if (profile) {
+    ageInput.value = profile.age;
+    heightInput.value = profile.height;
+    currentWeightInput.value = profile.current;
+    targetWeightInput.value = profile.target;
+    document.querySelector(`input[name="gender"][value="${profile.gender}"]`).checked = true;
+    calculateGoal(profile.current, profile.target);
+    calculateBMR(profile);
   }
 
   let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
@@ -31,15 +38,41 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   saveBtn.addEventListener("click", () => {
+    const age = parseInt(ageInput.value);
+    const gender = document.querySelector("input[name='gender']:checked").value;
+    const height = parseFloat(heightInput.value);
     const current = parseFloat(currentWeightInput.value);
     const target = parseFloat(targetWeightInput.value);
+
     if (!isNaN(current) && !isNaN(target)) {
-      const diff = current - target;
-      weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
-      localStorage.setItem("weightData", JSON.stringify({ current, target }));
-      showMyPage();
+      calculateGoal(current, target);
+    }
+
+    if (!isNaN(age) && !isNaN(height) && !isNaN(current)) {
+      const profile = { age, gender, height, current, target };
+      localStorage.setItem("profileData", JSON.stringify(profile));
+      calculateBMR(profile);
     }
   });
+
+  function calculateGoal(current, target) {
+    const diff = current - target;
+    weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
+  }
+
+  function calculateBMR(profile) {
+    const { age, gender, height, current } = profile;
+    let bmr;
+
+    if (gender === "male") {
+      bmr = 10 * current + 6.25 * height - 5 * age + 5;
+    } else {
+      bmr = 10 * current + 6.25 * height - 5 * age - 161;
+    }
+
+    const tdee = bmr * 1.5; // 軽い運動レベル
+    recommendedCalories.textContent = `推奨摂取カロリー: 約 ${Math.round(tdee)} kcal / 日`;
+  }
 
   foodInput.addEventListener("input", () => {
     const input = foodInput.value.trim();
@@ -61,15 +94,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  saveBtn.addEventListener("click", () => {
-    const current = parseFloat(currentWeightInput.value);
-    const target = parseFloat(targetWeightInput.value);
-    if (!isNaN(current) && !isNaN(target)) {
-      localStorage.setItem("weightData", JSON.stringify({ current, target }));
-      showMyPage(); // ← 表示更新はマイページでのみ
+  document.addEventListener("click", (e) => {
+    if (!suggestList.contains(e.target) && e.target !== foodInput) {
+      suggestList.innerHTML = "";
     }
   });
-  
+
   addBtn.addEventListener("click", () => {
     const food = foodInput.value.trim();
     const cal = parseFloat(calInput.value);
@@ -77,53 +107,29 @@ document.addEventListener("DOMContentLoaded", () => {
       addMealDirect(food, cal);
     }
   });
-  
+
   function addMealDirect(food, cal) {
     mealList.push({ food, cal });
     totalCalories += cal;
-  
+
+    const li = document.createElement("li");
+    li.textContent = `${food}：${cal} kcal`;
+    mealListEl.appendChild(li);
+
+    totalEl.textContent = `合計: ${totalCalories} kcal`;
+
     if (!foodDB.find(item => item.name === food)) {
       foodDB.push({ name: food, calories: cal });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
     }
-  
+
     foodInput.value = "";
     calInput.value = "";
     suggestList.innerHTML = "";
-    showMyPage(); // 表示更新
   }
-  
-  showMyPage(); // 初期表示
-});
 
-// マイページ表示更新
-function showMyPage() {
-  const weightData = JSON.parse(localStorage.getItem("weightData")) || { current: 0, target: 0 };
-  const current = weightData.current || 0;
-  const target = weightData.target || 0;
-  const diff = (current - target).toFixed(1);
-
-  document.getElementById("mypageWeight").textContent = `現在の体重：${current}kg`;
-  document.getElementById("mypageTarget").textContent = `目標の体重：${target}kg`;
-  document.getElementById("mypageDiff").textContent = `あと${diff}kg減らしたい！`;
-
-  const mealListElem = document.getElementById("mypageMeals");
-  const totalElem = document.getElementById("mypageTotal");
-  let total = 0;
-  mealListElem.innerHTML = "";
-
-  mealList.forEach(meal => {
-    const li = document.createElement("li");
-    li.textContent = `${meal.food}：${meal.cal} kcal`;
-    mealListElem.appendChild(li);
-    total += meal.cal;
+  // ログアウト処理
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    window.location.href = "index.html";
   });
-
-  totalElem.textContent = `合計: ${total} kcal`;
-}
-
-// セクション切替
-function toggleSection(target) {
-  document.getElementById("trackSection").style.display = target === "track" ? "block" : "none";
-  document.getElementById("mypageSection").style.display = target === "mypage" ? "block" : "none";
-}
+});

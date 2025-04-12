@@ -2,46 +2,36 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>MyFitTrack</title>
+    <title>MyFitTrack - ログイン / 新規登録</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#4caf50">
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(reg => console.log("Service Worker registered"))
-                .catch(err => console.error("Service Worker registration failed", err));
-        }
-    </script>
-    <script src="script.js" defer></script>
 </head>
 <body>
 <h1>MyFitTrack</h1>
 
-<!-- 体重設定 -->
 <section>
-    <h2>🎯 体重設定</h2>
-    <label>現在の体重(kg): <input type="number" id="currentWeight"></label><br>
-    <label>目標体重(kg): <input type="number" id="targetWeight"></label><br>
-    <button id="saveWeight">保存</button>
-    <p id="weightInfo"></p>
+    <h2>🔐 ログイン</h2>
+    <label>ユーザー名: <input type="text" id="loginUsername"></label><br>
+    <label>パスワード: <input type="password" id="loginPassword"></label><br>
+    <button id="loginBtn">ログイン</button>
 </section>
 
-<!-- 食事入力 -->
-<section style="position: relative;">
-    <h2>🍴 食事記録</h2>
-    <label>メニュー名: <input type="text" id="foodName" placeholder="例: カレーライス"></label>
-    <ul id="suggestList" class="suggest-box"></ul>
-    <label>カロリー: <input type="number" id="calories" placeholder="kcal"></label>
-    <button id="addMeal">追加</button>
-</section>
-
-<!-- カロリー集計 -->
 <section>
-    <h2>📊 今日の摂取カロリー</h2>
-    <ul id="mealList"></ul>
-    <p id="totalCalories">合計: 0 kcal</p>
+    <h2>📝 新規登録</h2>
+    <label>ユーザー名: <input type="text" id="registerUsername"></label><br>
+    <label>パスワード: <input type="password" id="registerPassword"></label><br>
+    <button id="registerBtn">登録</button>
 </section>
 
+<script>
+    document.getElementById("loginBtn").addEventListener("click", () => {
+        alert("ログイン処理（あとで実装）");
+        window.location.href = "mypage.html";  // 仮でマイページへ
+    });
+
+    document.getElementById("registerBtn").addEventListener("click", () => {
+        alert("登録処理（あとで実装）");
+        window.location.href = "mypage.html";  // 仮でマイページへ
+    });
+</script>
 </body>
 </html>
