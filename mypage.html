@@ -7,42 +7,41 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- ヘッダー -->
-<header class="header">
-  <h1 class="logo">MyFitTrack</h1>
-  <button id="logoutBtn">ログアウト</button>
-</header>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo">MyFitTrack</div>
+      <button class="logout-btn" onclick="location.href='index.html'">ログアウト</button>
+    </div>
+  </header>
 
   <main>
-
     <!-- プロフィール -->
     <section class="card">
       <h2>👤 プロフィール</h2>
 
       <div class="form-group">
-        <label>年齢:</label>
+        <label for="age">年齢:</label>
         <input type="number" id="age" />
       </div>
 
       <div class="form-group">
         <label>性別:</label>
-        <label><input type="radio" name="gender" value="male" checked> 男性</label>
-        <label><input type="radio" name="gender" value="female"> 女性</label>
+        <label><input type="radio" name="gender" value="male" checked /> 男性</label>
+        <label><input type="radio" name="gender" value="female" /> 女性</label>
       </div>
 
       <div class="form-group">
-        <label>身長 (cm):</label>
+        <label for="height">身長 (cm):</label>
         <input type="number" id="height" />
       </div>
 
       <div class="form-group">
-        <label>現在の体重 (kg):</label>
+        <label for="currentWeight">現在の体重 (kg):</label>
         <input type="number" id="currentWeight" />
       </div>
 
       <div class="form-group">
-        <label>目標体重 (kg):</label>
+        <label for="targetWeight">目標体重 (kg):</label>
         <input type="number" id="targetWeight" />
       </div>
 
@@ -53,18 +52,16 @@
 
     <!-- 食事記録 -->
     <section class="card">
-      <h2>🍽 食事記録</h2>
+      <h2>🍴 食事記録</h2>
 
       <div class="form-group">
-        <label>メニュー名:</label>
-        <div style="position: relative;">
-          <input type="text" id="foodName" placeholder="例: カレーライス" autocomplete="off" />
-          <ul id="suggestList" class="suggest-box"></ul>
-        </div>
+        <label for="foodName">メニュー名:</label>
+        <input type="text" id="foodName" placeholder="例: カレーライス" autocomplete="off" />
+        <ul id="suggestList" class="suggest-box"></ul>
       </div>
 
       <div class="form-group">
-        <label>カロリー:</label>
+        <label for="calories">カロリー:</label>
         <input type="number" id="calories" placeholder="kcal" />
       </div>
 
@@ -77,7 +74,6 @@
       <ul id="mealList"></ul>
       <p id="totalCalories">合計: 0 kcal</p>
     </section>
-
   </main>
 
   <footer>
