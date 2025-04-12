@@ -82,5 +82,17 @@
   </footer>
 
   <script src="mypage.js" defer></script>
+  <script src="mypage.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('./service-worker.js')
+        .then(reg => console.log('✅ Service Worker Registered:', reg))
+        .catch(err => console.error('❌ Service Worker registration failed:', err));
+    });
+  }
+</script>
+
 </body>
 </html>
