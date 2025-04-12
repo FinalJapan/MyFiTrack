@@ -1,85 +1,129 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MyFitTrack - マイページ</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header class="app-header">
-    <div class="header-container">
-      <div class="logo">MyFitTrack</div>
-      <button class="logout-btn" onclick="location.href='index.html'">ログアウト</button>
-    </div>
-  </header>
+let totalCalories = 0;
+let mealList = [];
+const STORAGE_KEY = "foodDB";
 
-  <main>
-    <!-- プロフィール -->
-    <section class="card">
-      <h2>👤 プロフィール</h2>
+document.addEventListener("DOMContentLoaded", () => {
+  const ageEl = document.getElementById("age");
+  const heightEl = document.getElementById("height");
+  const currentEl = document.getElementById("currentWeight");
+  const targetEl = document.getElementById("targetWeight");
+  const saveBtn = document.getElementById("saveWeight");
+  const weightInfo = document.getElementById("weightInfo");
+  const bmrInfo = document.getElementById("bmrInfo");
 
-      <div class="form-group">
-        <label for="age">年齢:</label>
-        <input type="number" id="age" />
-      </div>
+  const foodInput = document.getElementById("foodName");
+  const calInput = document.getElementById("calories");
+  const addBtn = document.getElementById("addMeal");
+  const mealListEl = document.getElementById("mealList");
+  const totalEl = document.getElementById("totalCalories");
+  const suggestList = document.getElementById("suggestList");
 
-      <div class="form-group">
-        <label>性別:</label>
-        <label><input type="radio" name="gender" value="male" checked /> 男性</label>
-        <label><input type="radio" name="gender" value="female" /> 女性</label>
-      </div>
+  // DBに保存してある食品候補
+  let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+    { name: "ご飯", calories: 168 },
+    { name: "味噌汁", calories: 40 },
+    { name: "カレーライス", calories: 600 },
+    { name: "焼き魚", calories: 180 },
+    { name: "チキン南蛮", calories: 720 }
+  ];
 
-      <div class="form-group">
-        <label for="height">身長 (cm):</label>
-        <input type="number" id="height" />
-      </div>
+  // weightData 読み込み
+  const stored = JSON.parse(localStorage.getItem("profileData"));
+  if (stored) {
+    ageEl.value = stored.age;
+    heightEl.value = stored.height;
+    currentEl.value = stored.current;
+    targetEl.value = stored.target;
+    document.querySelector(`input[name="gender"][value="${stored.gender}"]`).checked = true;
 
-      <div class="form-group">
-        <label for="currentWeight">現在の体重 (kg):</label>
-        <input type="number" id="currentWeight" />
-      </div>
+    const diff = stored.current - stored.target;
+    weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
 
-      <div class="form-group">
-        <label for="targetWeight">目標体重 (kg):</label>
-        <input type="number" id="targetWeight" />
-      </div>
+    const bmr = calculateBMR(stored);
+    bmrInfo.textContent = `推奨摂取カロリー：約 ${Math.round(bmr)} kcal / 日`;
+  }
 
-      <button id="saveWeight">保存</button>
-      <p id="weightInfo"></p>
-      <p id="bmrInfo"></p>
-    </section>
+  // 保存ボタン
+  saveBtn.addEventListener("click", () => {
+    const age = parseInt(ageEl.value);
+    const height = parseFloat(heightEl.value);
+    const current = parseFloat(currentEl.value);
+    const target = parseFloat(targetEl.value);
+    const gender = document.querySelector('input[name="gender"]:checked').value;
 
-    <!-- 食事記録 -->
-    <section class="card">
-      <h2>🍴 食事記録</h2>
+    if (!isNaN(age) && !isNaN(height) && !isNaN(current) && !isNaN(target)) {
+      const diff = current - target;
+      weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
 
-      <div class="form-group">
-        <label for="foodName">メニュー名:</label>
-        <input type="text" id="foodName" placeholder="例: カレーライス" autocomplete="off" />
-        <ul id="suggestList" class="suggest-box"></ul>
-      </div>
+      const bmr = calculateBMR({ age, height, current, gender });
+      bmrInfo.textContent = `推奨摂取カロリー：約 ${Math.round(bmr)} kcal / 日`;
 
-      <div class="form-group">
-        <label for="calories">カロリー:</label>
-        <input type="number" id="calories" placeholder="kcal" />
-      </div>
+      localStorage.setItem("profileData", JSON.stringify({ age, height, current, target, gender }));
+    }
+  });
 
-      <button id="addMeal">追加</button>
-    </section>
+  // BMR × 活動係数 で推奨摂取カロリー計算
+  function calculateBMR({ age, height, current, gender }) {
+    if (gender === "male") {
+      return (10 * current + 6.25 * height - 5 * age + 5) * 1.55;
+    } else {
+      return (10 * current + 6.25 * height - 5 * age - 161) * 1.55;
+    }
+  }
 
-    <!-- カロリー集計 -->
-    <section class="card">
-      <h2>📊 今日の摂取カロリー</h2>
-      <ul id="mealList"></ul>
-      <p id="totalCalories">合計: 0 kcal</p>
-    </section>
-  </main>
+  // サジェスト
+  foodInput.addEventListener("input", () => {
+    const input = foodInput.value.trim();
+    calInput.value = "";
+    suggestList.innerHTML = "";
+    if (input === "") return;
 
-  <footer>
-    <p>&copy; 2025 MyFitTrack</p>
-  </footer>
+    const matched = foodDB.filter(item => item.name.includes(input));
+    matched.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name}（${item.calories}kcal）`;
+      li.addEventListener("click", () => {
+        foodInput.value = item.name;
+        calInput.value = item.calories;
+        suggestList.innerHTML = "";
+        addMealDirect(item.name, item.calories);
+      });
+      suggestList.appendChild(li);
+    });
+  });
 
-  <script src="mypage.js" defer></script>
-</body>
-</html>
+  // サジェスト消す
+  document.addEventListener("click", (e) => {
+    if (!suggestList.contains(e.target) && e.target !== foodInput) {
+      suggestList.innerHTML = "";
+    }
+  });
+
+  // 追加ボタン
+  addBtn.addEventListener("click", () => {
+    const food = foodInput.value.trim();
+    const cal = parseFloat(calInput.value);
+    if (food && !isNaN(cal)) {
+      addMealDirect(food, cal);
+    }
+  });
+
+  function addMealDirect(food, cal) {
+    mealList.push({ food, cal });
+    totalCalories += cal;
+
+    const li = document.createElement("li");
+    li.textContent = `${food}：${cal} kcal`;
+    mealListEl.appendChild(li);
+    totalEl.textContent = `合計: ${totalCalories} kcal`;
+
+    if (!foodDB.find(item => item.name === food)) {
+      foodDB.push({ name: food, calories: cal });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
+    }
+
+    foodInput.value = "";
+    calInput.value = "";
+    suggestList.innerHTML = "";
+  }
+});
