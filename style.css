@@ -7,33 +7,43 @@ body {
   }
   
   /* ヘッダー */
-header.app-header {
-  background-color: #00704a;
-  color: #fff;
-  padding: 1rem;
+.header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* ロゴを中央に */
   align-items: center;
+  position: relative;
+  background-color: #f3f5f0;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ddd;
 }
 
-header .logo {
-  font-size: 1.5rem;
+.logo {
+  font-size: 1.8rem;
   font-weight: bold;
+  color: #222;
+  margin: 0 auto;
 }
 
-.logout-btn {
-  background: none;
+/* ログアウトボタンを右上に固定 */
+#logoutBtn {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #00704a;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
   border: none;
-  color: #fff;
-  font-size: 1rem;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-  
-  #logoutBtn:hover {
-    background-color: #005d3c;
-  }
-  
+#logoutBtn:hover {
+  background-color: #005d3c;
+}
+
   
   /* 中央コンテンツ */
   main {
