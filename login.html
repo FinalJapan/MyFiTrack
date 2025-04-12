@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyFitTrack - ログイン</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <main>
+    <h1 class="logo">MyFitTrack</h1>
+
+    <!-- 🔐 ログインフォーム -->
+    <section class="card">
+      <h2>🔐 ログイン</h2>
+      <label>
+        ユーザー名:
+        <input type="text" id="loginUsername" placeholder="ユーザー名を入力" />
+      </label>
+      <label>
+        パスワード:
+        <input type="password" id="loginPassword" placeholder="パスワードを入力" />
+      </label>
+      <button id="loginBtn">ログイン</button>
+    </section>
+
+    <!-- 📝 新規登録フォーム -->
+    <section class="card">
+      <h2>📝 新規登録</h2>
+      <label>
+        ユーザー名:
+        <input type="text" id="registerUsername" placeholder="新しいユーザー名" />
+      </label>
+      <label>
+        パスワード:
+        <input type="password" id="registerPassword" placeholder="パスワードを入力" />
+      </label>
+      <button id="registerBtn">登録</button>
+    </section>
+  </main>
+
+  <script src="auth.js" defer></script>
+</body>
+</html>
