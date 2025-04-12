@@ -1,13 +1,16 @@
-let totalCalories = 0;
-let mealList = [];
 const STORAGE_KEY = "foodDB";
+const PROFILE_KEY = "profileData";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const ageEl = document.getElementById("age");
-  const heightEl = document.getElementById("height");
-  const currentEl = document.getElementById("currentWeight");
-  const targetEl = document.getElementById("targetWeight");
-  const saveBtn = document.getElementById("saveWeight");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  const ageInput = document.getElementById("age");
+  const heightInput = document.getElementById("height");
+  const currentWeightInput = document.getElementById("currentWeight");
+  const targetWeightInput = document.getElementById("targetWeight");
+  const genderInputs = document.getElementsByName("gender");
+
+  const saveBtn = document.getElementById("saveProfile");
   const weightInfo = document.getElementById("weightInfo");
   const bmrInfo = document.getElementById("bmrInfo");
 
@@ -18,7 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalEl = document.getElementById("totalCalories");
   const suggestList = document.getElementById("suggestList");
 
-  // DBに保存してある食品候補
+  let totalCalories = 0;
+  let mealList = [];
+
   let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
     { name: "ご飯", calories: 168 },
     { name: "味噌汁", calories: 40 },
@@ -27,51 +32,46 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "チキン南蛮", calories: 720 }
   ];
 
-  // weightData 読み込み
-  const stored = JSON.parse(localStorage.getItem("profileData"));
-  if (stored) {
-    ageEl.value = stored.age;
-    heightEl.value = stored.height;
-    currentEl.value = stored.current;
-    targetEl.value = stored.target;
-    document.querySelector(`input[name="gender"][value="${stored.gender}"]`).checked = true;
-
-    const diff = stored.current - stored.target;
-    weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
-
-    const bmr = calculateBMR(stored);
-    bmrInfo.textContent = `推奨摂取カロリー：約 ${Math.round(bmr)} kcal / 日`;
+  // 初期表示：プロフィール読み込み
+  const profile = JSON.parse(localStorage.getItem(PROFILE_KEY));
+  if (profile) {
+    ageInput.value = profile.age;
+    heightInput.value = profile.height;
+    currentWeightInput.value = profile.current;
+    targetWeightInput.value = profile.target;
+    [...genderInputs].forEach(r => {
+      if (r.value === profile.gender) r.checked = true;
+    });
+    updateWeightInfo(profile);
   }
 
-  // 保存ボタン
   saveBtn.addEventListener("click", () => {
-    const age = parseInt(ageEl.value);
-    const height = parseFloat(heightEl.value);
-    const current = parseFloat(currentEl.value);
-    const target = parseFloat(targetEl.value);
-    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const age = parseInt(ageInput.value);
+    const height = parseFloat(heightInput.value);
+    const current = parseFloat(currentWeightInput.value);
+    const target = parseFloat(targetWeightInput.value);
+    const gender = [...genderInputs].find(r => r.checked)?.value;
 
     if (!isNaN(age) && !isNaN(height) && !isNaN(current) && !isNaN(target)) {
-      const diff = current - target;
-      weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
-
-      const bmr = calculateBMR({ age, height, current, gender });
-      bmrInfo.textContent = `推奨摂取カロリー：約 ${Math.round(bmr)} kcal / 日`;
-
-      localStorage.setItem("profileData", JSON.stringify({ age, height, current, target, gender }));
+      const profileData = { age, height, current, target, gender };
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData));
+      updateWeightInfo(profileData);
     }
   });
 
-  // BMR × 活動係数 で推奨摂取カロリー計算
-  function calculateBMR({ age, height, current, gender }) {
-    if (gender === "male") {
-      return (10 * current + 6.25 * height - 5 * age + 5) * 1.55;
-    } else {
-      return (10 * current + 6.25 * height - 5 * age - 161) * 1.55;
-    }
+  function updateWeightInfo({ age, height, current, target, gender }) {
+    const diff = current - target;
+    weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
+
+    // BMR計算：ハリス・ベネディクト式
+    let bmr = gender === "female"
+      ? 655 + 9.6 * current + 1.8 * height - 4.7 * age
+      : 66 + 13.7 * current + 5.0 * height - 6.8 * age;
+
+    const daily = bmr * 1.55;
+    bmrInfo.textContent = `推奨摂取カロリー：約 ${Math.round(daily)} kcal / 日`;
   }
 
-  // サジェスト
   foodInput.addEventListener("input", () => {
     const input = foodInput.value.trim();
     calInput.value = "";
@@ -92,14 +92,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // サジェスト消す
   document.addEventListener("click", (e) => {
     if (!suggestList.contains(e.target) && e.target !== foodInput) {
       suggestList.innerHTML = "";
     }
   });
 
-  // 追加ボタン
   addBtn.addEventListener("click", () => {
     const food = foodInput.value.trim();
     const cal = parseFloat(calInput.value);
@@ -115,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const li = document.createElement("li");
     li.textContent = `${food}：${cal} kcal`;
     mealListEl.appendChild(li);
+
     totalEl.textContent = `合計: ${totalCalories} kcal`;
 
     if (!foodDB.find(item => item.name === food)) {
@@ -126,4 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
     calInput.value = "";
     suggestList.innerHTML = "";
   }
+
+  logoutBtn.addEventListener("click", () => {
+    window.location.href = "index.html"; // ログイン画面に戻る
+  });
 });
