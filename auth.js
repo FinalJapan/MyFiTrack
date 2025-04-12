@@ -74,7 +74,7 @@ $("loginBtn").addEventListener("click", async () => {
   if (users[username] === hashed) {
     localStorage.setItem("currentUser", username);
     alert("ログイン成功！");
-    window.location.href = "index.html";
+    window.location.href = "./mypage.html";
   } else {
     alert("パスワードが間違っています。");
   }
