@@ -6,6 +6,42 @@ body {
   padding: 0;
 }
 
+/* ヘッダー配置 */
+.header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f3f5f0;
+  padding: 1rem 1rem 0.5rem;
+  box-sizing: border-box;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #222;
+}
+
+/* ログアウトボタンを右上に */
+#logoutBtn {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #00704a;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+#logoutBtn:hover {
+  background-color: #005d3c;
+}
+
 /* 中央コンテンツ */
 main {
   display: flex;
