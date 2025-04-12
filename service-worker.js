@@ -1,11 +1,8 @@
-const CACHE_NAME = "myfittrack-cache-v1";
+const CACHE_NAME = "myfittrack-v1";
 const FILES_TO_CACHE = [
   "./",
-  "./index.html",         // または login.html に変更
-  "./login.html",
+  "./index.html",         // ログインページ（旧login.html）
   "./mypage.html",
-  "./login.css",
-  "./mypage.css",
   "./auth.js",
   "./mypage.js",
   "./manifest.json",
@@ -13,38 +10,44 @@ const FILES_TO_CACHE = [
   "./icon-512.png"
 ];
 
+// インストール時：初期キャッシュ登録
 self.addEventListener("install", event => {
-  console.log("[ServiceWorker] Install");
+  console.log("[SW] Installing & caching...");
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log("[ServiceWorker] Pre-caching files");
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-  self.skipWaiting();
+  self.skipWaiting(); // 即時適用
 });
 
+// 有効化時：古いキャッシュ削除
 self.addEventListener("activate", event => {
-  console.log("[ServiceWorker] Activate");
+  console.log("[SW] Activating...");
   event.waitUntil(
-    caches.keys().then(keyList =>
+    caches.keys().then(keys =>
       Promise.all(
-        keyList.map(key => {
+        keys.map(key => {
           if (key !== CACHE_NAME) {
-            console.log("[ServiceWorker] Removing old cache", key);
+            console.log("[SW] Deleting old cache:", key);
             return caches.delete(key);
           }
         })
       )
     )
   );
-  self.clients.claim();
+  self.clients.claim(); // 即座に制御
 });
 
+// fetch：オンライン優先 → オフライン時にキャッシュ
 self.addEventListener("fetch", event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+    fetch(event.request)
+      .then(response => {
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
 });
