@@ -6,24 +6,26 @@ body {
   padding: 0;
 }
 
-/* ヘッダー配置 */
+/* ヘッダー */
 .header {
-  position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: center; /* ロゴを中央に */
   align-items: center;
+  position: relative;
   background-color: #f3f5f0;
-  padding: 1rem 1rem 0.5rem;
+  padding: 1rem;
   box-sizing: border-box;
+  border-bottom: 1px solid #ddd;
 }
 
 .logo {
   font-size: 1.8rem;
   font-weight: bold;
   color: #222;
+  margin: 0 auto;
 }
 
-/* ログアウトボタンを右上に */
+/* ログアウトボタンを右上に固定 */
 #logoutBtn {
   position: absolute;
   right: 1rem;
@@ -31,16 +33,17 @@ body {
   transform: translateY(-50%);
   background-color: #00704a;
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
-  border-radius: 6px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 #logoutBtn:hover {
   background-color: #005d3c;
 }
+
 
 /* 中央コンテンツ */
 main {
