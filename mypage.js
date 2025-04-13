@@ -169,29 +169,41 @@ document.addEventListener("DOMContentLoaded", () => {
       calorieChart.update();
     } else {
       calorieChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['推奨', '実際'],
-          datasets: [{
-            label: 'カロリー (kcal)',
-            data: [recommended, actual],
-            backgroundColor: ['#00704A', '#f59e0b']
-          }]
+  type: 'bar',
+  data: {
+    labels: ['推奨', '実際'],
+    datasets: [{
+      label: 'カロリー (kcal)',
+      data: [recommended, actual],
+      backgroundColor: ['#00704A', '#f59e0b']
+    }]
+  },
+  options: {
+    responsive: true,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      datalabels: {
+        anchor: 'center',
+        align: 'center',
+        color: '#ffffff',
+        font: {
+          weight: 'bold',
+          size: 12
         },
-        options: {
-          responsive: true,
-          indexAxis: 'y',
-          plugins: {
-            legend: { display: false }
-          },
-          scales: {
-            x: {
-              beginAtZero: true,
-              suggestedMax: recommended * 1.2
-            }
-          }
-        }
-      });
+        formatter: (value) => `${value} kcal`
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        suggestedMax: recommended * 1.2
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
     }
   }
 
