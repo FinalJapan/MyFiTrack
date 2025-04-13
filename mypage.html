@@ -24,7 +24,44 @@
   </header>
 
   <main class="p-4 space-y-6 max-w-xl mx-auto">
-    <!-- 🎯 カロリー表示 -->
+
+    <!-- 👤 プロフィール -->
+    <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4">
+      <h2 class="text-lg font-bold text-[#00704A]">👤 プロフィール</h2>
+
+      <div class="flex items-center gap-4">
+        <label class="w-28">年齢:</label>
+        <input type="number" id="age" class="w-full p-2 rounded border border-[#00704A] bg-white/30" />
+      </div>
+
+      <div class="flex items-center gap-4">
+        <span class="w-28">性別:</span>
+        <div class="flex gap-4">
+          <label><input type="radio" name="gender" value="male" checked /> 男性</label>
+          <label><input type="radio" name="gender" value="female" /> 女性</label>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label class="w-28">身長 (cm):</label>
+        <input type="number" id="height" class="w-full p-2 rounded border border-[#00704A] bg-white/30" />
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label class="w-28">現体重 (kg):</label>
+        <input type="number" id="currentWeight" class="w-full p-2 rounded border border-[#00704A] bg-white/30" />
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label class="w-28">目標体重 (kg):</label>
+        <input type="number" id="targetWeight" class="w-full p-2 rounded border border-[#00704A] bg-white/30" />
+      </div>
+
+      <button id="saveWeight" class="w-full mt-2 bg-[#00704A] text-white py-2 rounded-full font-bold hover:bg-[#005c3d] transition">💾 SAVE</button>
+      <p id="weightInfo" class="text-sm mt-1 text-[#00704A]"></p>
+    </section>
+
+    <!-- 🎯 推奨摂取カロリー -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4">
       <h2 class="text-lg font-bold text-[#00704A]">🎯 推奨摂取カロリー</h2>
       <p id="recommendedCalories" class="text-lg font-bold text-gray-900 whitespace-nowrap mb-2">約 0 kcal / 日</p>
@@ -37,22 +74,15 @@
       <div class="flex items-start gap-4 relative">
         <label for="foodName" class="w-28 text-sm mt-2">メニュー名:</label>
         <div class="relative w-full">
-          <input type="text" id="foodName"
-            class="w-full p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400"
-            placeholder="例: カレーライス" />
-          <ul id="suggestList"
-              class="absolute top-full left-0 w-full bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
+          <input type="text" id="foodName" class="w-full p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400" placeholder="例: カレーライス" />
+          <ul id="suggestList" class="absolute top-full left-0 w-full bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
         </div>
       </div>
       <div class="flex items-center gap-4">
         <label for="calories" class="w-28 text-sm">カロリー:</label>
-        <input type="number" id="calories"
-          class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400"
-          placeholder="kcal" />
+        <input type="number" id="calories" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400" placeholder="kcal" />
       </div>
-      <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold hover:bg-[#005c3d] transition">
-        🍣 追加
-      </button>
+      <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold hover:bg-[#005c3d] transition">🍣 追加</button>
     </section>
 
     <!-- 📊 今日の摂取 -->
