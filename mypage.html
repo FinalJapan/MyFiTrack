@@ -76,39 +76,43 @@
 
 
       <!-- 食事記録 -->
-  <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
-    <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
+<section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
+  <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
 
-    <div class="flex items-center gap-4">
-      <label for="foodName" class="w-28 text-sm">メニュー名:</label>
-      <input
-        type="text"
-        id="foodName"
-        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
-               outline-none focus:ring-0 focus:border-[#00704A]"
-        placeholder="例: カレーライス"
-      />
-    </div>
+  <!-- 入力とサジェスト一体構造 -->
+  <div class="relative flex items-center gap-4">
+    <label for="foodName" class="w-28 text-sm">メニュー名:</label>
+    <input
+      type="text"
+      id="foodName"
+      class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
+             outline-none focus:ring-0 focus:border-[#00704A]"
+      placeholder="例: カレーライス"
+    />
 
-    <!-- サジェストを foodName 直下に -->
+    <!-- ✅ 修正済：位置ピッタリ揃う -->
     <ul id="suggestList"
-      class="absolute left-[7.5rem] top-[6.5rem] w-[70%] bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
+        class="absolute top-full left-28 w-[calc(100%-7rem)] bg-white border border-[#00704A] 
+               rounded shadow z-50 mt-1 text-sm text-gray-800">
+    </ul>
+  </div>
 
-    <div class="flex items-center gap-4">
-      <label for="calories" class="w-28 text-sm">カロリー:</label>
-      <input
-        type="number"
-        id="calories"
-        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
-               outline-none focus:ring-0 focus:border-[#00704A]"
-        placeholder="kcal"
-      />
-    </div>
+  <div class="flex items-center gap-4">
+    <label for="calories" class="w-28 text-sm">カロリー:</label>
+    <input
+      type="number"
+      id="calories"
+      class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
+             outline-none focus:ring-0 focus:border-[#00704A]"
+      placeholder="kcal"
+    />
+  </div>
 
-    <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold hover:bg-[#005c3d] transition">
-      🍣 追加
-    </button>
-  </section>
+  <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold hover:bg-[#005c3d] transition">
+    🍣 追加
+  </button>
+</section>
+
 
   <!-- 今日の摂取カロリー -->
   <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-2">
