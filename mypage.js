@@ -76,23 +76,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   foodInput.addEventListener("input", () => {
-    const input = foodInput.value.trim();
-    calInput.value = "";
-    suggestList.innerHTML = "";
-    if (input === "") return;
+  const input = foodInput.value.trim();
+  calInput.value = "";
+  suggestList.innerHTML = "";
+  if (input === "") return;
 
-    const matched = foodDB.filter(item => item.name.includes(input));
-    matched.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name}（${item.calories}kcal）`;
-      li.addEventListener("click", () => {
-        foodInput.value = item.name;
-        calInput.value = item.calories;
-        suggestList.innerHTML = "";
-      });
-      suggestList.appendChild(li);
+  const matched = foodDB.filter(item => item.name.includes(input));
+  matched.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name}（${item.calories}kcal）`;
+
+    // ✅ 即追加処理
+    li.addEventListener("click", () => {
+      mealList.push({ food: item.name, cal: item.calories });
+      localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
+      renderMealList();
+
+      if (!foodDB.find(f => f.name === item.name)) {
+        foodDB.push(item);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
+      }
+
+      foodInput.value = "";
+      calInput.value = "";
+      suggestList.innerHTML = "";
     });
+
+    suggestList.appendChild(li);
   });
+});
 
   document.addEventListener("click", (e) => {
     if (!suggestList.contains(e.target) && e.target !== foodInput) {
