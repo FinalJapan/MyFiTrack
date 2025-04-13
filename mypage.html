@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MyFitTrack</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
-  <meta name="theme-color" content="#00704A" />
   <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#00704A" />
   <style>
     body {
       font-family: 'Manrope', sans-serif;
@@ -21,14 +22,15 @@
     <button id="logoutBtn" class="text-sm hover:text-amber-200 transition">LOGOUT</button>
   </header>
 
-  <main class="p-4 space-y-6">
-    <!-- PROFILE -->
+  <main class="p-4 space-y-6 max-w-xl mx-auto">
+
+    <!-- 👤 PROFILE -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4">
       <h2 class="text-lg font-bold text-[#00704A]">👤 PROFILE</h2>
 
       <div class="flex items-center gap-4">
         <label for="age" class="w-28 text-sm">年齢:</label>
-        <input id="age" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+        <input id="age" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
       <div class="flex items-center gap-4">
@@ -41,29 +43,36 @@
 
       <div class="flex items-center gap-4">
         <label for="height" class="w-28 text-sm">身長 (cm):</label>
-        <input id="height" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+        <input id="height" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
       <div class="flex items-center gap-4">
         <label for="currentWeight" class="w-28 text-sm">現体重 (kg):</label>
-        <input id="currentWeight" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+        <input id="currentWeight" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
       <div class="flex items-center gap-4">
         <label for="targetWeight" class="w-28 text-sm">目標体重 (kg):</label>
-        <input id="targetWeight" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+        <input id="targetWeight" type="number" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
-      <button id="saveWeight" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold mt-2 hover:bg-[#005c3d] transition">💾 SAVE</button>
+      <button id="saveWeight" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold mt-2 hover:bg-[#005c3d] transition">
+        💾 SAVE
+      </button>
+
       <p id="weightInfo" class="text-sm text-gray-700 mt-2 whitespace-nowrap"></p>
 
+      <!-- ✅ 推奨摂取カロリー + グラフ -->
       <div class="bg-white/20 border border-[#00704A]/40 p-4 rounded mt-2 shadow backdrop-blur">
         <p class="text-sm text-[#00704A] font-semibold whitespace-nowrap">🎯 推奨摂取カロリー</p>
-        <p class="text-lg font-bold text-gray-900 whitespace-nowrap" id="recommendedCalories">約 0 kcal / 日</p>
+        <p id="recommendedCalories" class="text-lg font-bold text-gray-900 whitespace-nowrap mb-2">
+          約 0 kcal / 日
+        </p>
+        <canvas id="calorieChart" class="w-full h-[60px]"></canvas>
       </div>
     </section>
 
-    <!-- 食事記録 -->
+    <!-- 🍱 食事記録 -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
       <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
 
@@ -71,20 +80,18 @@
         <label for="foodName" class="w-28 text-sm mt-2">メニュー名:</label>
         <div class="relative w-full">
           <input type="text" id="foodName"
-            class="w-full p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
-                   outline-none focus:ring-0 focus:border-[#00704A]"
+            class="w-full p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400"
             placeholder="例: カレーライス" />
           <ul id="suggestList"
-              class="absolute top-full left-0 w-full bg-white border border-[#00704A] 
-                     rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
+              class="absolute top-full left-0 w-full bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800">
+          </ul>
         </div>
       </div>
 
       <div class="flex items-center gap-4">
         <label for="calories" class="w-28 text-sm">カロリー:</label>
         <input type="number" id="calories"
-          class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
-                 outline-none focus:ring-0 focus:border-[#00704A]"
+          class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400"
           placeholder="kcal" />
       </div>
 
@@ -93,12 +100,13 @@
       </button>
     </section>
 
-    <!-- 今日の摂取カロリー -->
+    <!-- 📊 今日の摂取カロリー -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-2">
       <h2 class="text-lg font-bold text-[#00704A] whitespace-nowrap">📊 今日の摂取カロリー</h2>
       <ul id="mealList" class="text-sm text-gray-800 space-y-1"></ul>
       <p id="totalCalories" class="font-bold text-lime-700 mt-1 whitespace-nowrap">合計: 0 kcal</p>
     </section>
+
   </main>
 
   <footer class="text-center text-xs text-gray-500 py-4">
@@ -106,15 +114,5 @@
   </footer>
 
   <script src="mypage.js" defer></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('./service-worker.js')
-          .then(reg => console.log('✅ SW registered', reg))
-          .catch(err => console.error('❌ SW failed', err));
-      });
-    }
-  </script>
 </body>
 </html>
