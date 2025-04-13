@@ -4,10 +4,10 @@ let calorieChart;
 const STORAGE_KEY = "foodDB";
 const MEAL_KEY = "mealList";
 
-// 🌟 シャドウプラグイン定義
+// 🌟 グラフシャドウ
 const shadowPlugin = {
   id: 'barShadow',
-  afterDatasetDraw(chart, args, options) {
+  afterDatasetDraw(chart, args) {
     const { ctx } = chart;
     const dataset = chart.data.datasets[args.index];
     ctx.save();
@@ -32,19 +32,71 @@ document.addEventListener("DOMContentLoaded", () => {
   const suggestList = document.getElementById("suggestList");
   const recommendedCalories = document.getElementById("recommendedCalories");
 
+  const ageInput = document.getElementById("age");
+  const heightInput = document.getElementById("height");
+  const currentWeightInput = document.getElementById("currentWeight");
+  const targetWeightInput = document.getElementById("targetWeight");
+  const weightInfo = document.getElementById("weightInfo");
+  const saveBtn = document.getElementById("saveWeight");
+
   let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
     { name: "ご飯", calories: 168 },
     { name: "味噌汁", calories: 40 },
     { name: "焼き魚", calories: 180 }
   ];
 
-  // 初期化：履歴復元・カロリー表示
-  const savedMeals = JSON.parse(localStorage.getItem(MEAL_KEY)) || [];
-  mealList = savedMeals;
-  renderMealList();
-  updateCalorieChart(2000, totalCalories);
+  // 🌟 プロフィール復元
+  const profile = JSON.parse(localStorage.getItem("profileData"));
+  if (profile) {
+    ageInput.value = profile.age;
+    heightInput.value = profile.height;
+    currentWeightInput.value = profile.current;
+    targetWeightInput.value = profile.target;
+    document.querySelector(`input[name="gender"][value="${profile.gender}"]`).checked = true;
+    updateGoal(profile.current, profile.target);
+    calculateBMR(profile);
+  }
 
-  // サジェスト表示と即追加
+  // 🌟 履歴復元
+  mealList = JSON.parse(localStorage.getItem(MEAL_KEY)) || [];
+  renderMealList();
+
+  // 🌟 プロフィール保存
+  saveBtn.addEventListener("click", () => {
+    const age = parseInt(ageInput.value);
+    const gender = document.querySelector("input[name='gender']:checked").value;
+    const height = parseFloat(heightInput.value);
+    const current = parseFloat(currentWeightInput.value);
+    const target = parseFloat(targetWeightInput.value);
+
+    if ([age, height, current, target].some(v => isNaN(v) || v <= 0)) {
+      alert("年齢・身長・体重は正の数で入力してください");
+      return;
+    }
+
+    const profile = { age, gender, height, current, target };
+    localStorage.setItem("profileData", JSON.stringify(profile));
+    updateGoal(current, target);
+    calculateBMR(profile);
+  });
+
+  // 🌟 推奨カロリー計算
+  function calculateBMR({ age, gender, height, current }) {
+    const bmr = gender === "male"
+      ? 10 * current + 6.25 * height - 5 * age + 5
+      : 10 * current + 6.25 * height - 5 * age - 161;
+
+    const tdee = Math.round(bmr * 1.5);
+    recommendedCalories.textContent = `約 ${tdee} kcal / 日`;
+    updateCalorieChart(tdee, totalCalories);
+  }
+
+  function updateGoal(current, target) {
+    const diff = current - target;
+    weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
+  }
+
+  // 🌟 サジェスト
   foodInput.addEventListener("input", () => {
     const input = foodInput.value.trim();
     calInput.value = "";
@@ -66,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 手動追加
+  // 🌟 手動追加
   addBtn.addEventListener("click", () => {
     const food = foodInput.value.trim();
     const cal = parseFloat(calInput.value);
@@ -82,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     suggestList.innerHTML = "";
   });
 
-  // リスト描画 + 合計カロリー更新
+  // 🌟 リスト描画
   function renderMealList() {
     mealListEl.innerHTML = "";
     totalCalories = 0;
@@ -108,27 +160,25 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCalorieChart(getRecommendedValue(), totalCalories);
   }
 
-  // テキストから数値取得
   function getRecommendedValue() {
     const match = recommendedCalories.textContent.match(/([0-9]+)/);
     return match ? parseInt(match[1]) : 2000;
   }
 
-  // グラフ描画
+  // 🌟 グラフ描画
   function updateCalorieChart(recommended, actual) {
     const ctx = document.getElementById('calorieChart').getContext('2d');
+    const grad1 = ctx.createLinearGradient(0, 0, 300, 0);
+    grad1.addColorStop(0, "#004d40");
+    grad1.addColorStop(1, "#26a69a");
 
-    const gradRecommended = ctx.createLinearGradient(0, 0, 300, 0);
-    gradRecommended.addColorStop(0, "#004d40");
-    gradRecommended.addColorStop(1, "#26a69a");
-
-    const gradActual = ctx.createLinearGradient(0, 0, 300, 0);
-    gradActual.addColorStop(0, "#f59e0b");
-    gradActual.addColorStop(1, "#fcd34d");
+    const grad2 = ctx.createLinearGradient(0, 0, 300, 0);
+    grad2.addColorStop(0, "#f59e0b");
+    grad2.addColorStop(1, "#fcd34d");
 
     if (calorieChart) {
       calorieChart.data.datasets[0].data = [recommended, actual];
-      calorieChart.data.datasets[0].backgroundColor = [gradRecommended, gradActual];
+      calorieChart.data.datasets[0].backgroundColor = [grad1, grad2];
       calorieChart.update();
     } else {
       calorieChart = new Chart(ctx, {
@@ -136,9 +186,8 @@ document.addEventListener("DOMContentLoaded", () => {
         data: {
           labels: ['推奨', '実際'],
           datasets: [{
-            label: 'カロリー (kcal)',
             data: [recommended, actual],
-            backgroundColor: [gradRecommended, gradActual]
+            backgroundColor: [grad1, grad2]
           }]
         },
         options: {
@@ -150,16 +199,13 @@ document.addEventListener("DOMContentLoaded", () => {
             datalabels: {
               anchor: 'center',
               align: 'center',
-              color: '#ffffff',
+              color: '#fff',
               font: { weight: 'bold', size: 12 },
               formatter: (value) => `${value} kcal`
             }
           },
           scales: {
-            x: {
-              beginAtZero: true,
-              display: false
-            }
+            x: { beginAtZero: true, display: false }
           }
         },
         plugins: [ChartDataLabels, shadowPlugin]
@@ -167,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ログアウト（仮機能）
+  // 🌟 ログアウト
   document.getElementById("logoutBtn").addEventListener("click", () => {
     localStorage.removeItem("currentUser");
     window.location.href = "index.html";
