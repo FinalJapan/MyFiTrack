@@ -20,13 +20,11 @@
 
 <body class="text-gray-800">
 
-  <!-- ヘッダー -->
   <header class="bg-[#00704A] text-white px-4 py-3 shadow flex justify-between items-center">
     <h1 class="text-xl font-bold tracking-widest">MyFitTrack</h1>
     <button id="logoutBtn" class="text-sm hover:text-amber-200 transition">LOGOUT</button>
   </header>
 
-  <!-- 本文 -->
   <main class="p-4 space-y-6">
 
     <!-- PROFILE -->
@@ -35,7 +33,7 @@
 
       <div>
         <label class="block text-sm">年齢</label>
-        <input id="age" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
+        <input type="number" id="age" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
       </div>
 
       <div>
@@ -48,17 +46,17 @@
 
       <div>
         <label class="block text-sm">身長 (cm)</label>
-        <input id="height" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
+        <input type="number" id="age" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
       </div>
 
       <div>
         <label class="block text-sm">現体重 (kg)</label>
-        <input id="currentWeight" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
+        <input type="number" id="age" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
       </div>
 
       <div>
         <label class="block text-sm">目標体重 (kg)</label>
-        <input id="targetWeight" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
+        <input type="number" id="age" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
       </div>
 
       <button id="saveWeight" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold mt-2">💾 SAVE</button>
@@ -76,20 +74,25 @@
 
       <div class="relative">
         <label class="block text-sm">メニュー名</label>
-        <input type="text" id="foodName" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" placeholder="例: カレーライス" />
-        <!-- サジェスト -->
+        <input type="text" id="foodName"
+          class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
+                 outline-none focus:ring-0 focus:border-[#00704A]"
+          placeholder="例: カレーライス" />
         <ul id="suggestList" class="absolute top-full left-0 w-full bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
       </div>
 
       <div>
         <label class="block text-sm">カロリー</label>
-        <input type="number" id="calories" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" placeholder="kcal" />
+        <input type="number" id="calories"
+          class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
+                 outline-none focus:ring-0 focus:border-[#00704A]"
+          placeholder="kcal" />
       </div>
 
       <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold">🍣 追加</button>
     </section>
 
-    <!-- カロリー合計 -->
+    <!-- 摂取カロリー -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-2">
       <h2 class="text-lg font-bold text-[#00704A] whitespace-nowrap">📊 今日の摂取カロリー</h2>
       <ul id="mealList" class="text-sm text-gray-800 space-y-1"></ul>
