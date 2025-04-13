@@ -15,6 +15,9 @@
       font-family: 'Manrope', sans-serif;
       background: linear-gradient(to bottom right, #ffffff, #f3f4f6);
     }
+    input, button {
+      touch-action: manipulation;
+    }
   </style>
 </head>
 <body class="text-gray-800">
@@ -71,11 +74,11 @@
     <!-- 🍱 食事記録 -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
       <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
-      <div class="flex items-start gap-4 relative">
+      <div class="flex items-start gap-4 relative z-10">
         <label for="foodName" class="w-28 text-sm mt-2">メニュー名:</label>
         <div class="relative w-full">
           <input type="text" id="foodName" class="w-full p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400" placeholder="例: カレーライス" />
-          <ul id="suggestList" class="absolute top-full left-0 w-full bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
+          <ul id="suggestList" class="absolute top-full left-0 w-full max-h-48 overflow-auto bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
         </div>
       </div>
       <div class="flex items-center gap-4">
