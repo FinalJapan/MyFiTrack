@@ -1,5 +1,6 @@
 let totalCalories = 0;
 let mealList = [];
+let calorieChart;
 const STORAGE_KEY = "foodDB";
 const MEAL_KEY = "mealList";
 
@@ -41,9 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 食事履歴復元
   const savedMeals = JSON.parse(localStorage.getItem(MEAL_KEY)) || [];
-  savedMeals.forEach(({ food, cal }) => mealList.push({ food, cal }));
+  mealList = savedMeals;
   renderMealList();
 
+  // 保存ボタン
   saveBtn.addEventListener("click", () => {
     const age = parseInt(ageInput.value);
     const gender = document.querySelector("input[name='gender']:checked").value;
@@ -73,45 +75,39 @@ document.addEventListener("DOMContentLoaded", () => {
       : 10 * current + 6.25 * height - 5 * age - 161;
     const tdee = bmr * 1.5;
     recommendedCalories.textContent = `約 ${Math.round(tdee)} kcal / 日`;
+    updateCalorieChart(getRecommendedValue(), totalCalories);
   }
 
+  // サジェスト候補（クリックで即追加）
   foodInput.addEventListener("input", () => {
-  const input = foodInput.value.trim();
-  calInput.value = "";
-  suggestList.innerHTML = "";
-  if (input === "") return;
+    const input = foodInput.value.trim();
+    calInput.value = "";
+    suggestList.innerHTML = "";
+    if (input === "") return;
 
-  const matched = foodDB.filter(item => item.name.includes(input));
-  matched.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = `${item.name}（${item.calories}kcal）`;
+    const matched = foodDB.filter(item => item.name.includes(input));
+    matched.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name}（${item.calories}kcal）`;
+      li.addEventListener("click", () => {
+        mealList.push({ food: item.name, cal: item.calories });
+        localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
+        renderMealList();
 
-    // ✅ 即追加処理
-    li.addEventListener("click", () => {
-      mealList.push({ food: item.name, cal: item.calories });
-      localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
-      renderMealList();
+        if (!foodDB.find(f => f.name === item.name)) {
+          foodDB.push(item);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
+        }
 
-      if (!foodDB.find(f => f.name === item.name)) {
-        foodDB.push(item);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
-      }
-
-      foodInput.value = "";
-      calInput.value = "";
-      suggestList.innerHTML = "";
+        foodInput.value = "";
+        calInput.value = "";
+        suggestList.innerHTML = "";
+      });
+      suggestList.appendChild(li);
     });
-
-    suggestList.appendChild(li);
-  });
-});
-
-  document.addEventListener("click", (e) => {
-    if (!suggestList.contains(e.target) && e.target !== foodInput) {
-      suggestList.innerHTML = "";
-    }
   });
 
+  // 手動追加ボタン
   addBtn.addEventListener("click", () => {
     const food = foodInput.value.trim();
     const cal = parseFloat(calInput.value);
@@ -124,11 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     mealList.push({ food, cal });
     localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
     renderMealList();
-
-    if (!foodDB.find(item => item.name === food)) {
-      foodDB.push({ name: food, calories: cal });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
-    }
 
     foodInput.value = "";
     calInput.value = "";
@@ -163,8 +154,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     totalEl.textContent = `合計: ${totalCalories} kcal`;
+    updateCalorieChart(getRecommendedValue(), totalCalories);
   }
 
+  function getRecommendedValue() {
+    const match = recommendedCalories.textContent.match(/([0-9]+)/);
+    return match ? parseInt(match[1]) : 2000;
+  }
+
+  function updateCalorieChart(recommended, actual) {
+    const ctx = document.getElementById('calorieChart').getContext('2d');
+    if (calorieChart) {
+      calorieChart.data.datasets[0].data = [recommended, actual];
+      calorieChart.update();
+    } else {
+      calorieChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['推奨', '実際'],
+          datasets: [{
+            label: 'カロリー (kcal)',
+            data: [recommended, actual],
+            backgroundColor: ['#00704A', '#f59e0b']
+          }]
+        },
+        options: {
+          responsive: true,
+          indexAxis: 'y',
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              suggestedMax: recommended * 1.2
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // ログアウト処理
   document.getElementById("logoutBtn").addEventListener("click", () => {
     localStorage.removeItem("currentUser");
     window.location.href = "index.html";
