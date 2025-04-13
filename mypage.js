@@ -1,6 +1,7 @@
 let totalCalories = 0;
 let mealList = [];
 const STORAGE_KEY = "foodDB";
+const MEAL_KEY = "mealList";
 
 document.addEventListener("DOMContentLoaded", () => {
   const ageInput = document.getElementById("age");
@@ -18,6 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalEl = document.getElementById("totalCalories");
   const suggestList = document.getElementById("suggestList");
 
+  let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+    { name: "ご飯", calories: 168 },
+    { name: "味噌汁", calories: 40 },
+    { name: "カレーライス", calories: 600 },
+    { name: "焼き魚", calories: 180 },
+    { name: "チキン南蛮", calories: 720 }
+  ];
+
+  // プロフィール復元
   const profile = JSON.parse(localStorage.getItem("profileData"));
   if (profile) {
     ageInput.value = profile.age;
@@ -29,13 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateBMR(profile);
   }
 
-  let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-    { name: "ご飯", calories: 168 },
-    { name: "味噌汁", calories: 40 },
-    { name: "カレーライス", calories: 600 },
-    { name: "焼き魚", calories: 180 },
-    { name: "チキン南蛮", calories: 720 }
-  ];
+  // 食事履歴復元
+  const savedMeals = JSON.parse(localStorage.getItem(MEAL_KEY)) || [];
+  savedMeals.forEach(({ food, cal }) => mealList.push({ food, cal }));
+  renderMealList();
 
   saveBtn.addEventListener("click", () => {
     const age = parseInt(ageInput.value);
@@ -44,15 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const current = parseFloat(currentWeightInput.value);
     const target = parseFloat(targetWeightInput.value);
 
-    if (!isNaN(current) && !isNaN(target)) {
-      calculateGoal(current, target);
+    if ([age, height, current, target].some(v => isNaN(v) || v <= 0)) {
+      alert("年齢・身長・体重は正の数で入力してください");
+      return;
     }
 
-    if (!isNaN(age) && !isNaN(height) && !isNaN(current)) {
-      const profile = { age, gender, height, current, target };
-      localStorage.setItem("profileData", JSON.stringify(profile));
-      calculateBMR(profile);
-    }
+    const profile = { age, gender, height, current, target };
+    localStorage.setItem("profileData", JSON.stringify(profile));
+    calculateGoal(current, target);
+    calculateBMR(profile);
   });
 
   function calculateGoal(current, target) {
@@ -60,18 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
     weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
   }
 
-  function calculateBMR(profile) {
-    const { age, gender, height, current } = profile;
-    let bmr;
-
-    if (gender === "male") {
-      bmr = 10 * current + 6.25 * height - 5 * age + 5;
-    } else {
-      bmr = 10 * current + 6.25 * height - 5 * age - 161;
-    }
-
-    const tdee = bmr * 1.5; // 軽い運動レベル
-    recommendedCalories.textContent = `推奨摂取カロリー: 約 ${Math.round(tdee)} kcal / 日`;
+  function calculateBMR({ age, gender, height, current }) {
+    const bmr = gender === "male"
+      ? 10 * current + 6.25 * height - 5 * age + 5
+      : 10 * current + 6.25 * height - 5 * age - 161;
+    const tdee = bmr * 1.5;
+    recommendedCalories.textContent = `約 ${Math.round(tdee)} kcal / 日`;
   }
 
   foodInput.addEventListener("input", () => {
@@ -88,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
         foodInput.value = item.name;
         calInput.value = item.calories;
         suggestList.innerHTML = "";
-        addMealDirect(item.name, item.calories);
       });
       suggestList.appendChild(li);
     });
@@ -103,20 +103,15 @@ document.addEventListener("DOMContentLoaded", () => {
   addBtn.addEventListener("click", () => {
     const food = foodInput.value.trim();
     const cal = parseFloat(calInput.value);
-    if (food && !isNaN(cal)) {
-      addMealDirect(food, cal);
+
+    if (!food || isNaN(cal) || cal <= 0) {
+      alert("有効なメニュー名とカロリーを入力してください");
+      return;
     }
-  });
 
-  function addMealDirect(food, cal) {
     mealList.push({ food, cal });
-    totalCalories += cal;
-
-    const li = document.createElement("li");
-    li.textContent = `${food}：${cal} kcal`;
-    mealListEl.appendChild(li);
-
-    totalEl.textContent = `合計: ${totalCalories} kcal`;
+    localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
+    renderMealList();
 
     if (!foodDB.find(item => item.name === food)) {
       foodDB.push({ name: food, calories: cal });
@@ -126,10 +121,40 @@ document.addEventListener("DOMContentLoaded", () => {
     foodInput.value = "";
     calInput.value = "";
     suggestList.innerHTML = "";
+  });
+
+  function renderMealList() {
+    mealListEl.innerHTML = "";
+    totalCalories = 0;
+
+    mealList.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "flex justify-between items-center";
+
+      const text = document.createElement("span");
+      text.textContent = `${item.food}：${item.cal} kcal`;
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "🗑️";
+      delBtn.className = "text-red-600 ml-2 hover:text-red-800";
+      delBtn.onclick = () => {
+        mealList.splice(index, 1);
+        localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
+        renderMealList();
+      };
+
+      li.appendChild(text);
+      li.appendChild(delBtn);
+      mealListEl.appendChild(li);
+
+      totalCalories += item.cal;
+    });
+
+    totalEl.textContent = `合計: ${totalCalories} kcal`;
   }
 
-  // ログアウト処理
   document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
     window.location.href = "index.html";
   });
 });
