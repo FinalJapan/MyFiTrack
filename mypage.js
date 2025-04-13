@@ -184,8 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCalorieChart(recommended, actual) {
     const ctx = document.getElementById('calorieChart').getContext('2d');
     const grad1 = ctx.createLinearGradient(0, 0, 300, 0);
-    grad1.addColorStop(0, "#004d40");
-    grad1.addColorStop(1, "#26a69a");
+    grad1.addColorStop(0, "#1d4ed8");
+    grad1.addColorStop(1, "#60a5fa");
 
     const grad2 = ctx.createLinearGradient(0, 0, 300, 0);
     grad2.addColorStop(0, "#f59e0b");
