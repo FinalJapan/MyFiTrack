@@ -173,28 +173,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }]
   },
   options: {
-    responsive: true,
-    indexAxis: 'y',
-    plugins: {
-      legend: { display: false },
-      datalabels: {
-        anchor: 'center',
-        align: 'center',
-        color: '#ffffff',
-        font: {
-          weight: 'bold',
-          size: 12
-        },
-        formatter: (value) => `${value} kcal`
-      }
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        suggestedMax: recommended * 1.2
-      }
+  responsive: true,
+  indexAxis: 'y',
+  plugins: {
+    legend: { display: false },
+    tooltip: { enabled: false },
+    datalabels: {
+      anchor: 'center',
+      align: 'center',
+      color: '#ffffff',
+      font: {
+        weight: 'bold',
+        size: 12
+      },
+      formatter: (value) => `${value} kcal`
     }
   },
+  scales: {
+    x: {
+      beginAtZero: true,
+      display: false // ✅ x軸の数値/ラベルを完全に非表示にする
+    }
+  }
+},
   plugins: [ChartDataLabels]
 });
 
