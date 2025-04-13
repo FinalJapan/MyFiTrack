@@ -39,13 +39,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const weightInfo = document.getElementById("weightInfo");
   const saveBtn = document.getElementById("saveWeight");
 
-  let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-    { name: "ご飯", calories: 168 },
-    { name: "味噌汁", calories: 40 },
-    { name: "焼き魚", calories: 180 }
-  ];
+  let foodDB = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (!foodDB || !Array.isArray(foodDB)) {
+    foodDB = [
+      { name: "ご飯", calories: 168 },
+      { name: "味噌汁", calories: 40 },
+      { name: "焼き魚", calories: 180 },
+      { name: "カレーライス", calories: 600 }
+    ];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
+  }
 
-  // 🌟 プロフィール復元
   const profile = JSON.parse(localStorage.getItem("profileData"));
   if (profile) {
     ageInput.value = profile.age;
@@ -57,11 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateBMR(profile);
   }
 
-  // 🌟 履歴復元
   mealList = JSON.parse(localStorage.getItem(MEAL_KEY)) || [];
   renderMealList();
 
-  // 🌟 プロフィール保存
   saveBtn.addEventListener("click", () => {
     const age = parseInt(ageInput.value);
     const gender = document.querySelector("input[name='gender']:checked").value;
@@ -80,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateBMR(profile);
   });
 
-  // 🌟 推奨カロリー計算
   function calculateBMR({ age, gender, height, current }) {
     const bmr = gender === "male"
       ? 10 * current + 6.25 * height - 5 * age + 5
@@ -96,16 +97,27 @@ document.addEventListener("DOMContentLoaded", () => {
     weightInfo.textContent = `目標まであと ${diff.toFixed(1)}kg`;
   }
 
-  // 🌟 サジェスト
   foodInput.addEventListener("input", () => {
-    const input = foodInput.value.trim();
+    const input = foodInput.value.trim().toLowerCase();
     calInput.value = "";
     suggestList.innerHTML = "";
+
     if (input === "") return;
-    const matched = foodDB.filter(item => item.name.includes(input));
+
+    const matched = foodDB.filter(item => item.name.toLowerCase().includes(input));
+
+    if (matched.length === 0) {
+      const noResult = document.createElement("li");
+      noResult.textContent = "該当するメニューがありません";
+      noResult.className = "px-3 py-2 text-gray-500";
+      suggestList.appendChild(noResult);
+      return;
+    }
+
     matched.forEach(item => {
       const li = document.createElement("li");
       li.textContent = `${item.name}（${item.calories}kcal）`;
+      li.className = "cursor-pointer hover:bg-green-100 px-3 py-2 transition";
       li.addEventListener("click", () => {
         mealList.push({ food: item.name, cal: item.calories });
         localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
@@ -118,7 +130,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 🌟 手動追加
+  document.addEventListener("click", (e) => {
+    if (!suggestList.contains(e.target) && e.target !== foodInput) {
+      suggestList.innerHTML = "";
+    }
+  });
+
   addBtn.addEventListener("click", () => {
     const food = foodInput.value.trim();
     const cal = parseFloat(calInput.value);
@@ -134,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
     suggestList.innerHTML = "";
   });
 
-  // 🌟 リスト描画
   function renderMealList() {
     mealListEl.innerHTML = "";
     totalCalories = 0;
@@ -165,7 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return match ? parseInt(match[1]) : 2000;
   }
 
-  // 🌟 グラフ描画
   function updateCalorieChart(recommended, actual) {
     const ctx = document.getElementById('calorieChart').getContext('2d');
     const grad1 = ctx.createLinearGradient(0, 0, 300, 0);
@@ -213,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 🌟 ログアウト
   document.getElementById("logoutBtn").addEventListener("click", () => {
     localStorage.removeItem("currentUser");
     window.location.href = "index.html";
