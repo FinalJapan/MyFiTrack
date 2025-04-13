@@ -3,119 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MyFitTrack - マイページ</title>
+  <title>MyFitTrack</title>
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Manrope Font -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#00704A" />
+  <link rel="manifest" href="manifest.json" />
 
   <style>
     body {
       font-family: 'Manrope', sans-serif;
       background: linear-gradient(to bottom right, #ffffff, #f3f4f6);
     }
-    @keyframes fade-in-up {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-up {
-      animation: fade-in-up 0.6s ease-out both;
-    }
   </style>
 </head>
 
 <body class="text-gray-800">
 
-  <header class="bg-[#00704A] text-white px-6 py-4 shadow-md flex justify-between items-center">
-    <h1 class="text-2xl font-bold tracking-widest whitespace-nowrap">MyFitTrack</h1>
-    <button id="logoutBtn" class="text-sm hover:text-amber-200 transition whitespace-nowrap">LOGOUT</button>
+  <!-- ヘッダー -->
+  <header class="bg-[#00704A] text-white px-4 py-3 shadow flex justify-between items-center">
+    <h1 class="text-xl font-bold tracking-widest">MyFitTrack</h1>
+    <button id="logoutBtn" class="text-sm hover:text-amber-200 transition">LOGOUT</button>
   </header>
 
-  <main class="max-w-4xl mx-auto p-6 space-y-8">
+  <!-- 本文 -->
+  <main class="p-4 space-y-6">
 
     <!-- PROFILE -->
-    <div class="bg-white/10 border border-white/30 backdrop-blur-md rounded-2xl shadow-2xl p-6 animate-fade-in-up">
-      <h2 class="text-xl font-bold mb-4 text-[#00704A] whitespace-nowrap">👤 PROFILE</h2>
+    <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4">
+      <h2 class="text-lg font-bold text-[#00704A]">👤 PROFILE</h2>
 
-      <div class="flex items-center gap-4 mb-4">
-        <label for="age" class="w-32">年齢:</label>
-        <input type="number" id="age" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
+      <div>
+        <label class="block text-sm">年齢</label>
+        <input id="age" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
-      <div class="flex items-center gap-4 mb-4">
-        <span class="w-32">性別:</span>
+      <div>
+        <label class="block text-sm mb-1">性別</label>
         <div class="flex gap-4">
-          <label class="flex items-center"><input type="radio" name="gender" value="male" class="mr-1" checked> 男性</label>
-          <label class="flex items-center"><input type="radio" name="gender" value="female" class="mr-1"> 女性</label>
+          <label class="flex items-center"><input type="radio" name="gender" value="male" checked class="mr-1">男性</label>
+          <label class="flex items-center"><input type="radio" name="gender" value="female" class="mr-1">女性</label>
         </div>
       </div>
 
-      <div class="flex items-center gap-4 mb-4">
-        <label for="height" class="w-32">身長 (cm):</label>
-        <input type="number" id="height" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
+      <div>
+        <label class="block text-sm">身長 (cm)</label>
+        <input id="height" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
-      <div class="flex items-center gap-4 mb-4">
-        <label for="currentWeight" class="w-32">現体重 (kg):</label>
-        <input type="number" id="currentWeight" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
+      <div>
+        <label class="block text-sm">現体重 (kg)</label>
+        <input id="currentWeight" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
-      <div class="flex items-center gap-4 mb-4">
-        <label for="targetWeight" class="w-32">目標体重 (kg):</label>
-        <input type="number" id="targetWeight" class="w-20 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded" />
+      <div>
+        <label class="block text-sm">目標体重 (kg)</label>
+        <input id="targetWeight" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
       </div>
 
-      <button id="saveWeight" class="w-full mt-4 bg-[#00704A] text-white font-bold py-3 px-6 rounded-full shadow hover:shadow-[#00704A]/50 hover:bg-[#005c3d] transition-all duration-300 whitespace-nowrap">
-        💾 SAVE
-      </button>
+      <button id="saveWeight" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold mt-2">💾 SAVE</button>
+      <p id="weightInfo" class="text-sm text-gray-700 mt-2 whitespace-nowrap"></p>
 
-      <p id="weightInfo" class="mt-4 text-sm text-gray-700 whitespace-nowrap"></p>
-
-      <!-- 推奨カロリー -->
-      <div class="flex justify-center mt-4">
-        <div class="w-full max-w-sm bg-white/20 border border-[#00704A]/40 p-4 rounded shadow backdrop-blur">
-          <p class="text-sm text-[#00704A] font-semibold whitespace-nowrap">🎯 推奨摂取カロリー</p>
-          <p class="text-l font-bold text-gray-900 whitespace-nowrap" id="recommendedCalories">
-            約 0 kcal / 日
-          </p>
-        </div>
+      <div class="bg-white/20 border border-[#00704A]/40 p-4 rounded mt-2 shadow backdrop-blur">
+        <p class="text-sm text-[#00704A] font-semibold whitespace-nowrap">🎯 推奨摂取カロリー</p>
+        <p class="text-lg font-bold text-gray-900 whitespace-nowrap" id="recommendedCalories">約 0 kcal / 日</p>
       </div>
-    </div>
+    </section>
 
     <!-- 食事記録 -->
-    <div class="bg-white/10 border border-white/30 backdrop-blur-md rounded-2xl shadow-2xl p-6 animate-fade-in-up">
-      <h2 class="text-xl font-bold mb-4 text-[#00704A] whitespace-nowrap">🍱 食事記録</h2>
+    <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
+      <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
 
-      <div class="flex items-center gap-4 mb-4">
-        <label for="foodName" class="w-32 whitespace-nowrap">メニュー名:</label>
-        <input type="text" id="foodName" class="flex-1 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded placeholder-gray-400" placeholder="例: カレーライス" />
+      <div class="relative">
+        <label class="block text-sm">メニュー名</label>
+        <input type="text" id="foodName" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" placeholder="例: カレーライス" />
+        <!-- サジェスト -->
+        <ul id="suggestList" class="absolute top-full left-0 w-full bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
       </div>
 
-      <div class="flex items-center gap-4 mb-4">
-        <label for="calories" class="w-32 whitespace-nowrap">カロリー:</label>
-        <input type="number" id="calories" class="flex-1 bg-white/30 border border-[#00704A] text-gray-800 px-4 py-2 rounded placeholder-gray-400" placeholder="kcal" />
+      <div>
+        <label class="block text-sm">カロリー</label>
+        <input type="number" id="calories" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" placeholder="kcal" />
       </div>
 
-      <button id="addMeal" class="w-full bg-[#00704A] text-white font-bold py-3 px-6 rounded-full shadow hover:shadow-[#00704A]/50 hover:bg-[#005c3d] transition-all duration-300 whitespace-nowrap">
-        🍣 追加
-      </button>
+      <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold">🍣 追加</button>
+    </section>
 
-      <ul id="suggestList" class="suggest-box mt-2 text-gray-800"></ul>
-    </div>
-
-    <!-- 摂取カロリー -->
-    <div class="bg-white/10 border border-white/30 backdrop-blur-md rounded-2xl shadow-2xl p-6 animate-fade-in-up">
-      <h2 class="text-xl font-bold mb-4 text-[#00704A] whitespace-nowrap">📊 今日の摂取カロリー</h2>
-      <ul id="mealList" class="text-sm space-y-1 text-gray-900"></ul>
-      <p id="totalCalories" class="font-medium text-lime-700 mt-3 whitespace-nowrap">合計: 0 kcal</p>
-    </div>
+    <!-- カロリー合計 -->
+    <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-2">
+      <h2 class="text-lg font-bold text-[#00704A] whitespace-nowrap">📊 今日の摂取カロリー</h2>
+      <ul id="mealList" class="text-sm text-gray-800 space-y-1"></ul>
+      <p id="totalCalories" class="font-bold text-lime-700 mt-1 whitespace-nowrap">合計: 0 kcal</p>
+    </section>
 
   </main>
 
-  <footer class="text-center text-xs text-gray-400 py-4 mt-12 tracking-widest">
+  <footer class="text-center text-xs text-gray-500 py-4">
     &copy; 2025 MyFitTrack / Manrope UI
   </footer>
 
