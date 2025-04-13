@@ -25,96 +25,114 @@
     <button id="logoutBtn" class="text-sm hover:text-amber-200 transition">LOGOUT</button>
   </header>
 
-  <main class="p-4 space-y-6">
+ <main class="p-4 space-y-6">
 
-    <!-- PROFILE -->
-    <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4">
-      <h2 class="text-lg font-bold text-[#00704A]">👤 PROFILE</h2>
+  <!-- PROFILE -->
+  <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4">
+    <h2 class="text-lg font-bold text-[#00704A]">👤 PROFILE</h2>
 
-      <div>
-        <label class="block text-sm">年齢</label>
-        <input id="age" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
+    <div class="flex items-center gap-4">
+      <label for="age" class="w-28 text-sm">年齢:</label>
+      <input id="age" type="number"
+        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+    </div>
+
+    <div class="flex items-center gap-4">
+      <span class="w-28 text-sm">性別:</span>
+      <div class="flex gap-4">
+        <label class="flex items-center"><input type="radio" name="gender" value="male" checked class="mr-1">男性</label>
+        <label class="flex items-center"><input type="radio" name="gender" value="female" class="mr-1">女性</label>
       </div>
+    </div>
 
-      <div>
-        <label class="block text-sm mb-1">性別</label>
-        <div class="flex gap-4">
-          <label class="flex items-center"><input type="radio" name="gender" value="male" checked class="mr-1">男性</label>
-          <label class="flex items-center"><input type="radio" name="gender" value="female" class="mr-1">女性</label>
-        </div>
-      </div>
+    <div class="flex items-center gap-4">
+      <label for="height" class="w-28 text-sm">身長 (cm):</label>
+      <input id="height" type="number"
+        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+    </div>
 
-      <div>
-        <label class="block text-sm">身長 (cm)</label>
-        <input id="height" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
-      </div>
+    <div class="flex items-center gap-4">
+      <label for="currentWeight" class="w-28 text-sm">現体重 (kg):</label>
+      <input id="currentWeight" type="number"
+        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+    </div>
 
-      <div>
-        <label class="block text-sm">現体重 (kg)</label>
-        <input id="currentWeight" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
-      </div>
+    <div class="flex items-center gap-4">
+      <label for="targetWeight" class="w-28 text-sm">目標体重 (kg):</label>
+      <input id="targetWeight" type="number"
+        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 outline-none focus:ring-0 focus:border-[#00704A]" />
+    </div>
 
-      <div>
-        <label class="block text-sm">目標体重 (kg)</label>
-        <input id="targetWeight" type="number" class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30" />
-      </div>
+    <button id="saveWeight"
+      class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold mt-2 hover:bg-[#005c3d] transition">💾 SAVE</button>
 
-      <button id="saveWeight" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold mt-2">💾 SAVE</button>
-      <p id="weightInfo" class="text-sm text-gray-700 mt-2 whitespace-nowrap"></p>
+    <p id="weightInfo" class="text-sm text-gray-700 mt-2 whitespace-nowrap"></p>
 
-      <div class="bg-white/20 border border-[#00704A]/40 p-4 rounded mt-2 shadow backdrop-blur">
-        <p class="text-sm text-[#00704A] font-semibold whitespace-nowrap">🎯 推奨摂取カロリー</p>
-        <p class="text-lg font-bold text-gray-900 whitespace-nowrap" id="recommendedCalories">約 0 kcal / 日</p>
-      </div>
-    </section>
+    <div class="bg-white/20 border border-[#00704A]/40 p-4 rounded mt-2 shadow backdrop-blur">
+      <p class="text-sm text-[#00704A] font-semibold whitespace-nowrap">🎯 推奨摂取カロリー</p>
+      <p class="text-lg font-bold text-gray-900 whitespace-nowrap" id="recommendedCalories">約 0 kcal / 日</p>
+    </div>
+  </section>
 
-    <!-- 食事記録 -->
-    <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
-      <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
 
-      <div class="relative">
-        <label class="block text-sm">メニュー名</label>
-        <input type="text" id="foodName"
-          class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
-                 outline-none focus:ring-0 focus:border-[#00704A]"
-          placeholder="例: カレーライス" />
-        <ul id="suggestList" class="absolute top-full left-0 w-full bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
-      </div>
+      <!-- 食事記録 -->
+  <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
+    <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
 
-      <div>
-        <label class="block text-sm">カロリー</label>
-        <input type="number" id="calories"
-          class="w-full mt-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
-                 outline-none focus:ring-0 focus:border-[#00704A]"
-          placeholder="kcal" />
-      </div>
+    <div class="flex items-center gap-4">
+      <label for="foodName" class="w-28 text-sm">メニュー名:</label>
+      <input
+        type="text"
+        id="foodName"
+        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
+               outline-none focus:ring-0 focus:border-[#00704A]"
+        placeholder="例: カレーライス"
+      />
+    </div>
 
-      <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold">🍣 追加</button>
-    </section>
+    <!-- サジェストを foodName 直下に -->
+    <ul id="suggestList"
+      class="absolute left-[7.5rem] top-[6.5rem] w-[70%] bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
 
-    <!-- 摂取カロリー -->
-    <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-2">
-      <h2 class="text-lg font-bold text-[#00704A] whitespace-nowrap">📊 今日の摂取カロリー</h2>
-      <ul id="mealList" class="text-sm text-gray-800 space-y-1"></ul>
-      <p id="totalCalories" class="font-bold text-lime-700 mt-1 whitespace-nowrap">合計: 0 kcal</p>
-    </section>
+    <div class="flex items-center gap-4">
+      <label for="calories" class="w-28 text-sm">カロリー:</label>
+      <input
+        type="number"
+        id="calories"
+        class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400 
+               outline-none focus:ring-0 focus:border-[#00704A]"
+        placeholder="kcal"
+      />
+    </div>
 
-  </main>
+    <button id="addMeal" class="w-full bg-[#00704A] text-white py-3 rounded-full font-bold hover:bg-[#005c3d] transition">
+      🍣 追加
+    </button>
+  </section>
 
-  <footer class="text-center text-xs text-gray-500 py-4">
-    &copy; 2025 MyFitTrack / Manrope UI
-  </footer>
+  <!-- 今日の摂取カロリー -->
+  <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-2">
+    <h2 class="text-lg font-bold text-[#00704A] whitespace-nowrap">📊 今日の摂取カロリー</h2>
+    <ul id="mealList" class="text-sm text-gray-800 space-y-1"></ul>
+    <p id="totalCalories" class="font-bold text-lime-700 mt-1 whitespace-nowrap">合計: 0 kcal</p>
+  </section>
 
-  <script src="mypage.js" defer></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('./service-worker.js')
-          .then(reg => console.log('✅ SW registered', reg))
-          .catch(err => console.error('❌ SW failed', err));
-      });
-    }
-  </script>
+</main>
+
+<footer class="text-center text-xs text-gray-500 py-4">
+  &copy; 2025 MyFitTrack / Manrope UI
+</footer>
+
+<script src="mypage.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('./service-worker.js')
+        .then(reg => console.log('✅ SW registered', reg))
+        .catch(err => console.error('❌ SW failed', err));
+    });
+  }
+</script>
 </body>
 </html>
