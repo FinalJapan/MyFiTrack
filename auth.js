@@ -72,10 +72,13 @@ $("loginBtn").addEventListener("click", async () => {
 
   const hashed = await hashPassword(password);
   if (users[username] === hashed) {
-    localStorage.setItem("currentUser", JSON.stringify({ username: "ユーザー名" }));
+    // ✅ 修正：実際のusernameを保存
+    localStorage.setItem("currentUser", JSON.stringify({ username }));
+
     alert("ログイン成功！");
     window.location.href = "mypage.html";
   } else {
     alert("パスワードが間違っています。");
   }
 });
+
