@@ -149,6 +149,18 @@ document.addEventListener("DOMContentLoaded", () => {
     foodInput.value = "";
     calInput.value = "";
     suggestList.innerHTML = "";
+
+    // 🌟 新規フードをfoodDBに追加（重複チェック付き）
+  if (!foodDB.some(item => item.name === food)) {
+    foodDB.push({ name: food, calories: cal });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(foodDB));
+  }
+
+    renderMealList();
+  foodInput.value = "";
+  calInput.value = "";
+  suggestList.innerHTML = "";
+    
   });
 
   function renderMealList() {
