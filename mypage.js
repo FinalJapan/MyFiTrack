@@ -24,6 +24,16 @@ const shadowPlugin = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  // currentUserがいないならログイン画面に戻す
+  if (!currentUser) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // ログインユーザー名を表示するなど
+  console.log("ログイン中ユーザー：", currentUser.username);
   const foodInput = document.getElementById("foodName");
   const calInput = document.getElementById("calories");
   const addBtn = document.getElementById("addMeal");
