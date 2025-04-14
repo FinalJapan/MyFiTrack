@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <title>MyFiTrack</title>
 
   <!-- Tailwind CSS -->
@@ -41,9 +43,14 @@
 
     <!-- 📅 日付切り替えUI -->
     <section class="flex justify-between items-center text-[#00704A] font-bold text-lg mb-2">
-      <button id="prevDate" class="text-2xl px-2 hover:text-[#004d40] transition">◀</button>
+      <button id="prevDate" class="text-xl px-3 py-1 rounded-full bg-[#00704A] text-white hover:bg-[#005c3d] shadow transition">
+  <i class="fas fa-chevron-left"></i>
+</button>
       <div id="selectedDateText" class="text-center flex-1">04月14日（月）</div>
-      <button id="nextDate" class="text-2xl px-2 hover:text-[#004d40] transition">▶</button>
+      <button id="nextDate" class="w-10 h-10 flex items-center justify-center rounded-full bg-white text-[#00704A] shadow-md hover:shadow-inner hover:bg-[#e0f2f1] transition">
+  ▶
+</button>
+
     </section>
 
     <!-- 👤 プロフィール -->
