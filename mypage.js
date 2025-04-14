@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const USERNAME = currentUser.username;
   const STORAGE_KEY = `foodDB-${USERNAME}`;
-  const MEAL_KEY = `mealList-${USERNAME}`;
+  const today = getTodayKey();
+　const MEAL_KEY = `mealList-${USERNAME}-${today}`;
 
   console.log("ログイン中ユーザー：", USERNAME);
 
@@ -98,6 +99,14 @@ document.addEventListener("DOMContentLoaded", () => {
     updateGoal(current, target);
     calculateBMR(profile);
   });
+
+  function getTodayKey() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`; // 例：2025-04-14
+}
 
   // 🔢 BMR計算
   function calculateBMR({ age, gender, height, current }) {
