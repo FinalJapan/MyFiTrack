@@ -4,12 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MyFiTrack</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js と Plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+  <!-- Googleフォント -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- PWA設定 -->
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#00704A" />
+
   <style>
     body {
       font-family: 'Manrope', sans-serif;
@@ -20,20 +29,22 @@
     }
   </style>
 </head>
+
 <body class="text-gray-800">
+  <!-- ヘッダー -->
   <header class="bg-gradient-to-r from-[#004d40] to-[#26a69a] text-white px-4 py-3 shadow flex justify-between items-center">
     <h1 class="text-xl font-bold tracking-widest">MyFiTrack</h1>
     <button id="logoutBtn" class="text-sm hover:text-amber-200 transition">LOGOUT</button>
   </header>
 
   <main class="p-4 space-y-6 max-w-xl mx-auto">
-    
-<!-- 📅 日付表示UI -->
-<section class="flex justify-between items-center text-[#00704A] font-bold text-lg mb-2">
-  <button id="prevDate" class="text-2xl px-2 hover:text-[#004d40] transition">◀</button>
-  <div id="selectedDateText" class="text-center flex-1">04月14日（月）</div>
-  <button id="nextDate" class="text-2xl px-2 hover:text-[#004d40] transition">▶</button>
-</section>
+
+    <!-- 📅 日付切り替えUI -->
+    <section class="flex justify-between items-center text-[#00704A] font-bold text-lg mb-2">
+      <button id="prevDate" class="text-2xl px-2 hover:text-[#004d40] transition">◀</button>
+      <div id="selectedDateText" class="text-center flex-1">04月14日（月）</div>
+      <button id="nextDate" class="text-2xl px-2 hover:text-[#004d40] transition">▶</button>
+    </section>
 
     <!-- 👤 プロフィール -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4">
@@ -78,9 +89,10 @@
       <canvas id="calorieChart" class="w-full h-[60px]"></canvas>
     </section>
 
-    <!-- 🍱 食事記録 -->
+    <!-- 🍱 食事記録入力 -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-4 relative">
       <h2 class="text-lg font-bold text-[#00704A]">🍱 食事記録</h2>
+
       <div class="flex items-start gap-4 relative z-10">
         <label for="foodName" class="w-28 text-sm mt-2">メニュー名:</label>
         <div class="relative w-full">
@@ -88,16 +100,18 @@
           <ul id="suggestList" class="absolute top-full left-0 w-full max-h-48 overflow-auto bg-white border border-[#00704A] rounded shadow z-50 mt-1 text-sm text-gray-800"></ul>
         </div>
       </div>
+
       <div class="flex items-center gap-4">
         <label for="calories" class="w-28 text-sm">カロリー:</label>
         <input type="number" id="calories" class="flex-1 p-2 rounded border border-[#00704A] bg-white/30 placeholder-gray-400" placeholder="kcal" />
       </div>
+
       <button id="addMeal" class="w-full  bg-gradient-to-r from-[#004d40] to-[#26a69a] text-white py-3 rounded-full font-bold hover:bg-[#005c3d] transition">🍣 追加</button>
     </section>
 
     <!-- 📊 今日の摂取 -->
     <section class="bg-white/10 border border-white/30 backdrop-blur-md rounded-xl shadow p-4 space-y-2">
-      <h2 class="text-lg font-bold text-[#00704A] whitespace-nowrap">📊 今日の摂取カロリー</h2>
+      <h2 class="text-lg font-bold text-[#00704A] whitespace-nowrap">📊 選択日の摂取カロリー</h2>
       <ul id="mealList" class="text-sm text-gray-800 space-y-1"></ul>
       <p id="totalCalories" class="font-bold text-lime-700 mt-1 whitespace-nowrap">合計: 0 kcal</p>
     </section>
@@ -107,6 +121,7 @@
     &copy; 2025 MyFitTrack / Manrope UI
   </footer>
 
+  <!-- 🔗 JavaScript読み込み -->
   <script src="mypage.js" defer></script>
 </body>
 </html>
