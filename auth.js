@@ -72,7 +72,7 @@ $("loginBtn").addEventListener("click", async () => {
 
   const hashed = await hashPassword(password);
   if (users[username] === hashed) {
-    localStorage.setItem("currentUser", username);
+    localStorage.setItem("currentUser", JSON.stringify({ username: "ユーザー名" }));
     alert("ログイン成功！");
     window.location.href = "mypage.html";
   } else {
