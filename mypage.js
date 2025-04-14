@@ -4,6 +4,10 @@ let calorieChart;
 let selectedDate = new Date();
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("JavaScript読み込み成功！");
+console.log("prevDateBtn =", document.getElementById("prevDate"));
+console.log("nextDateBtn =", document.getElementById("nextDate"));
+
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (!currentUser || !currentUser.username) {
     window.location.href = "login.html";
