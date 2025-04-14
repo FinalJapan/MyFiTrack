@@ -1,6 +1,13 @@
 let totalCalories = 0;
 let mealList = [];
 let calorieChart;
+// 📅 選択中の日付を保持
+let selectedDate = new Date();
+
+// 日付表示DOM
+const selectedDateText = document.getElementById("selectedDateText");
+const prevDateBtn = document.getElementById("prevDate");
+const nextDateBtn = document.getElementById("nextDate");
 
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ ログインチェック
@@ -11,6 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const USERNAME = currentUser.username;
+
+    // ここが追加ポイント！
+  // ✅ 初期化した日付キーを保存し、UIを更新！
+  window.currentMealKey = `mealList-${USERNAME}-${formatKey(selectedDate)}`;
+  updateDateUI();
+  
   const STORAGE_KEY = `foodDB-${USERNAME}`;
   const today = getTodayKey();
 　const MEAL_KEY = `mealList-${USERNAME}-${today}`;
@@ -174,7 +187,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 🌟 mealListに追加
     mealList.push({ food, cal });
-    localStorage.setItem(MEAL_KEY, JSON.stringify(mealList));
+　　localStorage.setItem(window.currentMealKey, JSON.stringify(mealList));
+
 
     // 🌟 foodDBに登録（未登録のときのみ）
     if (!foodDB.some(item => item.name === food)) {
@@ -272,6 +286,58 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function formatDate(date) {
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const day = weekdays[date.getDay()];
+  return `${mm}月${dd}日（${day}）`;
+}
+
+function formatKey(date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+  prevDateBtn.addEventListener("click", () => {
+  selectedDate.setDate(selectedDate.getDate() - 1);
+  updateDateUI();
+});
+
+nextDateBtn.addEventListener("click", () => {
+  selectedDate.setDate(selectedDate.getDate() + 1);
+  updateDateUI();
+});
+
+  prevDateBtn.addEventListener("click", () => {
+  selectedDate.setDate(selectedDate.getDate() - 1);
+  updateDateUI();
+});
+
+nextDateBtn.addEventListener("click", () => {
+  selectedDate.setDate(selectedDate.getDate() + 1);
+  updateDateUI();
+});
+
+  function updateDateUI() {
+  // 1. 表示を更新
+  selectedDateText.textContent = formatDate(selectedDate);
+
+  // 2. mealListキーを切り替え
+  const dateKey = formatKey(selectedDate);
+  const MEAL_KEY = `mealList-${USERNAME}-${dateKey}`;
+  mealList = JSON.parse(localStorage.getItem(MEAL_KEY)) || [];
+
+  // 3. 表示更新
+  renderMealList();
+
+  // 4. 保存時もこのキーを使うように切り替える
+  window.currentMealKey = MEAL_KEY;
+}
+
+  
   // 🔒 ログアウト処理
   $("logoutBtn").addEventListener("click", () => {
     localStorage.removeItem("currentUser");
